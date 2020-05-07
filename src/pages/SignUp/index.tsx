@@ -23,6 +23,7 @@ import logoImg from '../../assets/logo.png';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 
+import api from '../../services/api';
 import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
 
 interface SignUpFormData {
@@ -53,21 +54,23 @@ const SignUp: React.FC = () => {
         abortEarly: false,
       });
       // Conneca com a API
-      // await api.post('/users', data);
-
-      // history.push('/');
-      // Adicionando um hook de Toast
-
+      await api.post('/users', data);
       Alert.alert(
-        'Erro no cadastro',
-        'Ocorreu um erro ao fazer o cadastro, tente novamente.',
+        'Cadastro realizado com sucesso!. ',
+        'Você já pode fazer login na aplicação',
       );
+      navigate.goBack();
     } catch (err) {
       // ! Verificar se o erro é uma instancia de Yup Validation Error
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
         // ? significa que num primeiro momento o formRef é nulo
         formRef.current?.setErrors(errors);
+
+        Alert.alert(
+          'Erro no cadastro',
+          'Ocorreu um erro ao fazer o cadastro, tente novamente.',
+        );
       }
     }
   }, []);
