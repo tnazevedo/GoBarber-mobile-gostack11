@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { getBottomSpace } from 'react-native-iphone-x-helper';
+import { Platform } from 'react-native';
 
 // Não ha diferença para criar componentes.
 // ! encadeamento de estilos não funciona com mobile
@@ -8,7 +9,7 @@ export const Container = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
-  padding: 0 30px;
+  padding: 0 30px ${Platform.OS === 'android' ? 160 : 40}px;
 `;
 
 export const Title = styled.Text`
