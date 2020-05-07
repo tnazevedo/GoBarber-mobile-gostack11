@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from 'react';
+import * as Yup from 'yup';
 import {
   Image,
   KeyboardAvoidingView,
@@ -6,12 +7,16 @@ import {
   View,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoImg from '../../assets/logo.png';
 
@@ -27,6 +32,11 @@ import {
   CreateAccountButtonText,
 } from './styles';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
@@ -34,9 +44,43 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   // ? formRef tem uma uma função chamada setFieldvalue
 
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data);
-  }, []);
+  const handleSignIn = useCallback(
+    // Com o useCallback toda váriavel externa ou função
+    // Adicione lá no final [] para o useCallback monitorar.
+    // data: SignInFormData => é o tipo de dado que o data vai receber.
+    async (data: SignInFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .email('Digite um e-mail válido')
+            .required('E-mail obrigatório'),
+          password: Yup.string().min(6, 'Senha Obrigatória'),
+        });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+        // await signIn({
+        //   email: data.email,
+        //   password: data.password,
+        // });
+      } catch (err) {
+        // ! Verificar se o erro é uma instancia de Yup Validation Error
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          // ? significa que num primeiro momento o formRef é nulo
+          formRef.current?.setErrors(errors);
+          return;
+        }
+        // ? caso não seja retornar uma mensagem mais generica.
+        Alert.alert(
+          'Erro na Autenticação',
+          'Ocorreu um erro ao fazer login, cheque as credênciais',
+        );
+      }
+    },
+    [],
+  );
 
   return (
     <>
