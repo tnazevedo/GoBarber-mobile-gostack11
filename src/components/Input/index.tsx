@@ -1,4 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from 'react';
 import { TextInputProps } from 'react-native';
 
 import { useField } from '@unform/core';
@@ -13,10 +18,29 @@ interface InputValueReference {
   value: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, icon, ...rest }) => {
+interface InputRef {
+  focus(): void;
+}
+// ? const Input: React.RefForwardingComponent<{},InputProps> = ({ name, icon, ...rest }, ref) => {
+// ? Este formato é utilizado apenas quando eu preciso referenciar um elemento
+
+const Input: React.RefForwardingComponent<InputRef, InputProps> = (
+  { name, icon, ...rest },
+  ref,
+) => {
   const inputElementRef = useRef<any>(null);
+
   const { registerField, defaultValue = '', fieldName, error } = useField(name);
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
+
+  // ? Apenas em casos muito especificos utilize isso é um hook para passar informações de um elemento filho para um pai
+
+  useImperativeHandle(ref, () => ({
+    focus() {
+      inputElementRef.current.focus();
+    },
+  }));
+
   useEffect(() => {
     registerField<string>({
       name: fieldName,
@@ -39,6 +63,7 @@ const Input: React.FC<InputProps> = ({ name, icon, ...rest }) => {
     <Container>
       <Icon name={icon} size={20} color="#666360" />
       <TextInput
+        ref={inputElementRef}
         keyboardAppearance="dark"
         placeholderTextColor="#666360"
         defaultValue={defaultValue}
@@ -50,5 +75,5 @@ const Input: React.FC<InputProps> = ({ name, icon, ...rest }) => {
     </Container>
   );
 };
-
-export default Input;
+// ? Qualquer componente  interno que receba essa função referencia, passe a função abaixo por volta do elemento
+export default forwardRef(Input);
