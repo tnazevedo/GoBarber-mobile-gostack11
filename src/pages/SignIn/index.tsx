@@ -16,6 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 
+import { useAuth } from '../../hooks/auth';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import logoImg from '../../assets/logo.png';
@@ -44,6 +45,8 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   // ? formRef tem uma uma função chamada setFieldvalue
 
+  const { signIn } = useAuth();
+
   const handleSignIn = useCallback(
     // Com o useCallback toda váriavel externa ou função
     // Adicione lá no final [] para o useCallback monitorar.
@@ -60,10 +63,10 @@ const SignIn: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
-        // await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
+        await signIn({
+          email: data.email,
+          password: data.password,
+        });
       } catch (err) {
         // ! Verificar se o erro é uma instancia de Yup Validation Error
         if (err instanceof Yup.ValidationError) {
@@ -79,7 +82,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [],
+    [signIn],
   );
 
   return (

@@ -39,41 +39,44 @@ const SignUp: React.FC = () => {
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome Obrigatório'),
-        email: Yup.string()
-          .email('Digite um e-mail válido')
-          .required('E-mail obrigatório'),
-        password: Yup.string().min(6, 'no mínimo 6 digitos'),
-      });
-      // valida o schema do Yup
-      await schema.validate(data, {
-        abortEarly: false,
-      });
-      // Conneca com a API
-      await api.post('/users', data);
-      Alert.alert(
-        'Cadastro realizado com sucesso!. ',
-        'Você já pode fazer login na aplicação',
-      );
-      navigate.goBack();
-    } catch (err) {
-      // ! Verificar se o erro é uma instancia de Yup Validation Error
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-        // ? significa que num primeiro momento o formRef é nulo
-        formRef.current?.setErrors(errors);
-
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome Obrigatório'),
+          email: Yup.string()
+            .email('Digite um e-mail válido')
+            .required('E-mail obrigatório'),
+          password: Yup.string().min(6, 'no mínimo 6 digitos'),
+        });
+        // valida o schema do Yup
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+        // Conneca com a API
+        await api.post('/users', data);
         Alert.alert(
-          'Erro no cadastro',
-          'Ocorreu um erro ao fazer o cadastro, tente novamente.',
+          'Cadastro realizado com sucesso!. ',
+          'Você já pode fazer login na aplicação',
         );
+        navigate.goBack();
+      } catch (err) {
+        // ! Verificar se o erro é uma instancia de Yup Validation Error
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          // ? significa que num primeiro momento o formRef é nulo
+          formRef.current?.setErrors(errors);
+
+          Alert.alert(
+            'Erro no cadastro',
+            'Ocorreu um erro ao fazer o cadastro, tente novamente.',
+          );
+        }
       }
-    }
-  }, []);
+    },
+    [navigate],
+  );
 
   return (
     <>
