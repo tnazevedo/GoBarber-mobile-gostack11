@@ -21,6 +21,7 @@ interface AuthContextData {
   user: object;
   signIn(credentials: SignIngCredentials): Promise<void>;
   signOut(): void;
+  loading: boolean;
 }
 
 // Context API  -  é uma das coisas mais fantasticas do react.
@@ -35,6 +36,8 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 export const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     async function loadStoragedData(): Promise<void> {
       const [token, user] = await AsyncStorage.multiGet([
@@ -45,6 +48,8 @@ export const AuthProvider: React.FC = ({ children }) => {
       if (token[1] && user[1]) {
         setData({ token: token[1], user: JSON.parse(user[1]) });
       }
+
+      setLoading(false);
     }
 
     loadStoragedData();
@@ -74,7 +79,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
