@@ -15,6 +15,7 @@ export const Header = styled.View`
   justify-content: space-between;
   align-items: center;
 `;
+Header.displayName = 'DashboardHeader';
 export const HeaderTitle = styled.Text`
   font-size: 20px;
   color: #f4ede8;
