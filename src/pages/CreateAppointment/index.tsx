@@ -34,6 +34,11 @@ export interface Provider {
   avatar_url: string;
 }
 
+interface AvailabilityItem {
+  hour: number;
+  available: boolean;
+}
+
 const CreateAppointment: React.FC = () => {
   // Variable Functions
   const route = useRoute();
@@ -42,6 +47,8 @@ const CreateAppointment: React.FC = () => {
   const routeParams = route.params as RouteParams;
 
   // States
+  const [availability, setAvailability] = useState<AvailabilityItem[]>([]);
+
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState(
     routeParams.providerId,
@@ -55,6 +62,21 @@ const CreateAppointment: React.FC = () => {
       setProviders(response.data);
     });
   }, []);
+  // Sempre que eu quero fazer uma ação que uma variável for mudar utilizo o useEffect
+
+  useEffect(() => {
+    api
+      .get(`/providers/${selectedProvider}/day-availability`, {
+        params: {
+          year: selectedDate.getFullYear(),
+          month: selectedDate.getMonth() + 1,
+          day: selectedDate.getDate(),
+        },
+      })
+      .then(response => {
+        setAvailability(response.data);
+      });
+  }, [selectedDate, selectedProvider]);
 
   // Functions
 
