@@ -45,7 +45,7 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   // ? formRef tem uma uma função chamada setFieldvalue
 
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
 
   const handleSignIn = useCallback(
     // Com o useCallback toda váriavel externa ou função
@@ -67,6 +67,7 @@ const SignIn: React.FC = () => {
           email: data.email,
           password: data.password,
         });
+        console.log(user);
       } catch (err) {
         // ! Verificar se o erro é uma instancia de Yup Validation Error
         if (err instanceof Yup.ValidationError) {
@@ -82,7 +83,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [signIn],
+    [signIn, user],
   );
 
   return (
@@ -129,6 +130,8 @@ const SignIn: React.FC = () => {
               <Button
                 onPress={() => {
                   formRef.current?.submitForm();
+                  console.log('Entrar Cliquei');
+                  console.log('usuário');
                 }}
               >
                 Entrar

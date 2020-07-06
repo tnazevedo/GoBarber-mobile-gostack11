@@ -33,7 +33,7 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
-  const navigate = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
   const emailInputRef = useRef<TextInput>(null);
@@ -60,7 +60,7 @@ const SignUp: React.FC = () => {
           'Cadastro realizado com sucesso!. ',
           'Você já pode fazer login na aplicação',
         );
-        navigate.goBack();
+        goBack();
       } catch (err) {
         // ! Verificar se o erro é uma instancia de Yup Validation Error
         if (err instanceof Yup.ValidationError) {
@@ -75,7 +75,7 @@ const SignUp: React.FC = () => {
         }
       }
     },
-    [navigate],
+    [navigate, goBack],
   );
 
   return (
@@ -141,7 +141,7 @@ const SignUp: React.FC = () => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      <BackToSignIn onPress={() => navigate.goBack()}>
+      <BackToSignIn onPress={() => goBack()}>
         <Icon name="arrow-left" size={20} color="#fff" />
         <BackToSignInText>Voltar para o logon</BackToSignInText>
       </BackToSignIn>

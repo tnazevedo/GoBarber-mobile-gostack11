@@ -10,10 +10,12 @@ const Routes: React.FC = () => {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        {/* Loading */}
         <ActivityIndicator size="large" color="#ccc" />
       </View>
     );
   }
+  console.log(user);
   return user ? <AppRoutes /> : <AuthRoutes />;
 };
 
