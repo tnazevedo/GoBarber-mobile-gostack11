@@ -33,7 +33,7 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
-  const { navigate, goBack } = useNavigation();
+  const { goBack } = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
   const emailInputRef = useRef<TextInput>(null);
@@ -75,7 +75,7 @@ const SignUp: React.FC = () => {
         }
       }
     },
-    [navigate, goBack],
+    [goBack],
   );
 
   return (

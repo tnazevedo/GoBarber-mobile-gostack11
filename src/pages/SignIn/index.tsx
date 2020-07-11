@@ -67,7 +67,6 @@ const SignIn: React.FC = () => {
           email: data.email,
           password: data.password,
         });
-        console.log(user);
       } catch (err) {
         // ! Verificar se o erro é uma instancia de Yup Validation Error
         if (err instanceof Yup.ValidationError) {
@@ -83,7 +82,7 @@ const SignIn: React.FC = () => {
         );
       }
     },
-    [signIn, user],
+    [signIn],
   );
 
   return (
@@ -130,8 +129,6 @@ const SignIn: React.FC = () => {
               <Button
                 onPress={() => {
                   formRef.current?.submitForm();
-                  console.log('Entrar Cliquei');
-                  console.log('usuário');
                 }}
               >
                 Entrar

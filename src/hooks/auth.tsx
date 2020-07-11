@@ -51,6 +51,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         '@GoBarber:token',
         '@GoBarber:user',
       ]);
+      // console.log('Token', token, user);
 
       if (token[1] && user[1]) {
         api.defaults.headers.authorization = `Bearer ${token[1]}`;

@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
-import api from 'src/services/api';
 import Icon from 'react-native-vector-icons/Feather';
+import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
 
 import {
@@ -29,7 +29,7 @@ export interface Provider {
   name: string;
   avatar_url: string;
 }
-const DashBoard: React.FC = () => {
+const Dashboard: React.FC = () => {
   // Sempre que for armazenar array num estado ou objeto no estado criar uma interface
   const [providers, setProviders] = useState<Provider[]>([]);
   const { signOut, user } = useAuth();
@@ -93,4 +93,4 @@ const DashBoard: React.FC = () => {
   );
 };
 
-export default DashBoard;
+export default Dashboard;
