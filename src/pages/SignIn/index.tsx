@@ -39,13 +39,13 @@ interface SignInFormData {
 }
 
 const SignIn: React.FC = () => {
-  const navigation = useNavigation();
+  const { navigate } = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
   const passwordInputRef = useRef<TextInput>(null);
   // ? formRef tem uma uma função chamada setFieldvalue
 
-  const { signIn, user } = useAuth();
+  const { signIn } = useAuth();
 
   const handleSignIn = useCallback(
     // Com o useCallback toda váriavel externa ou função
@@ -144,7 +144,7 @@ const SignIn: React.FC = () => {
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
-      <CreateAccountButton onPress={() => navigation.navigate('SignUp')}>
+      <CreateAccountButton onPress={() => navigate('SignUp')}>
         <Icon name="log-in" size={20} color="#ff9000" />
         <CreateAccountButtonText>Criar uma Conta</CreateAccountButtonText>
       </CreateAccountButton>
