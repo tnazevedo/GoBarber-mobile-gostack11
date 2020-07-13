@@ -32,7 +32,7 @@ export interface Provider {
 const Dashboard: React.FC = () => {
   // Sempre que for armazenar array num estado ou objeto no estado criar uma interface
   const [providers, setProviders] = useState<Provider[]>([]);
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
   const { navigate } = useNavigation();
   // Effects
   useEffect(() => {
