@@ -65,13 +65,14 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    // console.log('signIn');
+    console.log(email, password);
 
     const response = await api.post('sessions', {
       email,
       password,
     });
     const { token, user } = response.data;
+    console.log(response);
 
     await AsyncStorage.multiSet([
       ['@GoBarber:token', token],
@@ -80,7 +81,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     api.defaults.headers.authorization = `Bearer ${token}`;
 
-    setData({ token, user });
+    setData({ token, user } as AuthState);
     // console.log(response.data);
   }, []);
 

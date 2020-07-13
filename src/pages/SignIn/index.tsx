@@ -63,9 +63,11 @@ const SignIn: React.FC = () => {
         await schema.validate(data, {
           abortEarly: false,
         });
+        const { email, password } = data;
+        console.log(data);
         await signIn({
-          email: data.email,
-          password: data.password,
+          email,
+          password,
         });
       } catch (err) {
         // ! Verificar se o erro é uma instancia de Yup Validation Error
@@ -73,6 +75,7 @@ const SignIn: React.FC = () => {
           const errors = getValidationErrors(err);
           // ? significa que num primeiro momento o formRef é nulo
           formRef.current?.setErrors(errors);
+          console.log(errors);
           return;
         }
         // ? caso não seja retornar uma mensagem mais generica.
