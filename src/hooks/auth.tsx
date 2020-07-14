@@ -27,6 +27,7 @@ interface SignIngCredentials {
 interface AuthContextData {
   user: User;
   signIn(credentials: SignIngCredentials): Promise<void>;
+  updateUser(user: User): Promise<void>;
   signOut(): void;
   loading: boolean;
 }
@@ -65,14 +66,14 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    console.log(email, password);
+    // console.log(email, password);
 
     const response = await api.post('sessions', {
       email,
       password,
     });
     const { token, user } = response.data;
-    console.log(response);
+    // console.log(response);
 
     await AsyncStorage.multiSet([
       ['@GoBarber:token', token],
@@ -84,7 +85,16 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({ token, user } as AuthState);
     // console.log(response.data);
   }, []);
-
+  const updateUser = useCallback(
+    async (user: User) => {
+      await AsyncStorage.setItem('@GoBarber:user', JSON.stringify(user));
+      setData({
+        token: data.token,
+        user,
+      });
+    },
+    [setData, data.token],
+  );
   const signOut = useCallback(async () => {
     await AsyncStorage.multiRemove(['@GoBarber:token', '@GoBarber:user']);
 
@@ -92,7 +102,9 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user: data.user, loading, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user: data.user, loading, signIn, signOut, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
